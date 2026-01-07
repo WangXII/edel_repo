@@ -1,0 +1,13 @@
+
+beir==0.2.3
+colbert==0.40
+Deprecated==1.2.14
+elasticsearch==8.11.0
+faiss==1.7.4
+ftfy==6.3.1
+lxml==5.1.0
+polars==1.36.1
+pyahocorasick==2.0.0
+pytrec_eval==0.5
+sentence_transformers==2.2.2
+sqlitedict==2.1.0
