@@ -16,17 +16,19 @@ class ColBERTRetrieverEvaluator(RetrieverEvaluator):
         self,
         es_index="20231127_pubmed",
         num_gpu=3,
+        checkpoint="edel_repo_cache/pretrained_llm/colbertv2.0",
         index_dir="edel_repo_cache/colbert_2.0_index/",
-        index_name="colbert_v2.pubmed.384len.2bits",
+        index_name="colbert_v2.pubmed.512len.2bits",
         top_k_hits=[10, 100],
     ):
         with Run().context(RunConfig(nranks=num_gpu, experiment=index_dir)):
             self.searcher = Searcher(
                 index=index_name,
-                checkpoint="edel_repo_cache/pretrained_llm/colbertv2.0",
+                checkpoint=checkpoint,
             )
 
         dataset_file = "edel_repo_cache/datasets/pubmed.dataset"
+        
         if Path(dataset_file).exists():
             print("Loading dataset from local cache")
             self.dataset = load_from_disk(dataset_file)
@@ -71,27 +73,10 @@ if __name__ == "__main__":
     parser.add_argument("--model_index", type=int, default=-1)
     parser.add_argument("--mode", type=str, default="raw_text")
     parser.add_argument(
-        "--use_dot_product",
-        action="store_true",
-        help="Use dot product instead of cosine for retrieval",
-    )
-    parser.add_argument(
         "--data_set",
         type=str,
         default="uniprot",
         help="Data set to use for evaluation",
-    )
-    parser.add_argument(
-        "--only_use_flat_index",
-        action="store_true",
-        help="Only use flat index for retrieval",
-        default=True,
-    )
-    parser.add_argument(
-        "--pooling",
-        type=str,
-        default="cls",
-        help="Pooling strategy for sentence transformer",
     )
     parser.add_argument(
         "--data_split",
@@ -121,17 +106,15 @@ if __name__ == "__main__":
         action="store_true",
         help="Use full name in query",
     )
-    parser.add_argument(
-        "--use_asym_bi_encoder",
-        action="store_true",
-        help="Use asymmetric bi-encoder",
-    )
     args = parser.parse_args()
 
     model_index = MODEL_LIST[args.model_index]
 
     retriever = ColBERTRetrieverEvaluator(
         top_k_hits=args.top_k_hits,
+        checkpoint=model_index[0],
+        index_dir=model_index[1],
+        index_name=model_index[2],
         es_index="20231127_pubmed",
     )
 
@@ -182,7 +165,7 @@ if __name__ == "__main__":
     elif args.data_set == "uniprot":
         uniprot_samples = UniProtPTMExamples(mode=args.mode)
 
-        dataset_dict_train, _ = get_dataset_dict_uniprot(
+        dataset_dict_train, _, _ = get_dataset_dict_uniprot(
             uniprot_samples, datasplit=args.data_split
         )
 

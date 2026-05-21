@@ -42,8 +42,8 @@ margin_classes_uniprot_v1 = MarginConfig(
         "negative_other_substrate_no_catalyst_match": 1.0,
         # BM25 negatives
         "negative_same_substrate_not_uniprot_bm25": 0.8,
-        # BioASQ negatives
-        "negative_bioasq": 1.2,
+        # PubMed negatives
+        "negative_pubmed": 1.2,
     },
     margin_fn=lambda x: 1 - np.cos(x * np.pi / 2),
 )

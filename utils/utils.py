@@ -67,8 +67,20 @@ def process_pubmed_xmls(shards: List[str]) -> Generator[Dict, None, None]:
                 "month": month,
                 "day": day,
             }
-            print(contents)
             yield contents
+
+
+def create_pubmed_dataset_from_xmls(output_file: str):
+    shards = [
+        f"edel_repo_cache/pubmed/pubmed26n{i:04d}.xml"
+        for i in range(1, 1167)
+    ]
+    dataset = Dataset.from_generator(
+        process_pubmed_xmls,
+        gen_kwargs={"shards": shards},
+        num_proc=16,
+    )
+    dataset.save_to_disk(output_file)
 
 
 def get_retriever_query(
@@ -345,3 +357,6 @@ def get_dataset_dict_from_csv(csv_file):
         dataset_dict[(gene, variant)].setdefault("clinical_significance", []).append("")
 
     return dataset_dict
+
+if __name__ == "__main__":
+    create_pubmed_dataset_from_xmls("edel_repo_cache/datasets/pubmed.dataset")

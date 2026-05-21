@@ -78,6 +78,7 @@ class CiVICOncoKBRetriever(Retriever):
             "count_negative_previous_faiss_examples": 0,
             "count_negative_same_substrate_bm25": 0,
             "count_negative_bioasq": 0,
+            "count_negative_pubmed": 0,
         }
         self.previous_faiss_examples_count_dict = {
             "genes_found": 0,
@@ -102,8 +103,8 @@ class CiVICOncoKBRetriever(Retriever):
 
         super().__init__(*args, **kwargs)
 
-        if "negative_bioasq" in self.margin_value_dict:
-            self.add_bioasq_documents()
+        if "negative_pubmed" in self.margin_value_dict:
+            self.add_pubmed_documents()
 
         if "margin_classes_v1" in self.cache_file_prefix:
             self.bool_examples_other_variant_any_treatment = False
@@ -342,7 +343,7 @@ class CiVICOncoKBRetriever(Retriever):
 
         return input_examples
 
-    def get_negative_examples_bioasq(
+    def get_negative_examples_pubmed(
         self,
         substrate_name: str,
         substrate_synonyms: list[str],
@@ -369,8 +370,8 @@ class CiVICOncoKBRetriever(Retriever):
                 variant,
             )
 
-            # TODO Check that entity does not occur in the selected BioASQ text
-            # Draw random sample of PMIDs in all BioASQ texts
+            # TODO Check that entity does not occur in the selected PubMed text
+            # Draw random sample of PMIDs in all PubMed texts
             current_pmids = self.all_pmids_texts.sample(n=max_number, seed=seed)
             for i, example_text in enumerate(current_pmids["text"]):
                 current_pmid = int(current_pmids["pmid"][i])
@@ -983,21 +984,21 @@ class CiVICOncoKBRetriever(Retriever):
                     "count_negative_same_substrate_bm25"
                 ] += len(samples)
 
-            # Get negative examples from BioASQ
-            if "negative_bioasq" in self.margin_value_dict:
-                samples = self.get_negative_examples_bioasq(
+            # Get negative examples from PubMed
+            if "negative_pubmed" in self.margin_value_dict:
+                samples = self.get_negative_examples_pubmed(
                     eg_dataset[0]["gene"],
                     eg_dataset[0]["gene_synonyms"],
                     eg_dataset[0]["gene_full_name"],
                     variants,
                     label=0,
-                    margin=self.margin_value_dict["negative_bioasq"],
+                    margin=self.margin_value_dict["negative_pubmed"],
                     max_number=max_number,
                     seed=seed,
                 )
 
                 input_examples.extend(samples)
-                self.examples_count_dict["count_negative_bioasq"] += len(samples)
+                self.examples_count_dict["count_negative_pubmed"] += len(samples)
 
             if self.use_distant_bm_25_examples:
                 bm25_examples = self.get_bm25_examples(eg_dataset)

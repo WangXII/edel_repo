@@ -86,12 +86,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--cache_file_prefix",
         type=str,
-        default="uniprot_margin_classes_v17",
+        default="uniprot_margin_classes_v1",
     )
     parser.add_argument(
         "--margin_config",
         type=str,
-        default="margin_config_uniprot.margin_classes_uniprot_v17",
+        default="margin_config_uniprot.margin_classes_uniprot_v1",
     )
     parser.add_argument(
         "--train_on_eval",

@@ -40,57 +40,40 @@ class UniprotRetriever(Retriever):
         self.examples_count_dict = {
             "count_positive": 0,
             "count_positive_three_entities_catalyst_match": 0,
-            # "count_positive_substrate_res_catalyst_match": 0,  # New with v5
-            "count_positive_substrate_catalyst_match": 0,
             "count_positive_three_entities_no_catalyst_match": 0,
             "count_positive_ptm_catalyst_match": 0,
             "count_positive_other_two_entities_match": 0,
-            # "count_positive_ptm_res_match": 0,  # New with v5
             "count_positive_substrate_match": 0,
             "count_positive_other_one_entity_match": 0,
             "count_positive_no_entities_match": 0,
-            "count_positive_three_entities_substrate_match": 0,  # New with v13
-            "count_positive_substrate_respos_match": 0,  # New with v13
-            "count_positive_substrate_ptm_match": 0,  # New with v13
-            "count_positive_three_entities_no_substrate_match": 0,  # New with v13
-            "count_positive_two_entities_no_substrate_match": 0,  # New with v13
-            "count_positive_three_entities_substrate_catalyst_match": 0,  # New with v32
-            "count_positive_three_entities_substrate_no_catalyst_match": 0,  # New with v32
-            "count_positive_two_entities_substrate_no_catalyst_match": 0,  # New with v32
-            "count_negative_same_substrate_ptm_res_no_other_pos_any_catalyst_match": 0,  # New with v5
+            # Any catalyst matches
+            "count_negative_same_substrate_ptm_res_no_other_pos_any_catalyst_match": 0,
+            "count_negative_same_substrate_ptm_res_other_pos_any_catalyst_match": 0,
             "count_negative_same_substrate_ptm_no_other_respos_any_catalyst_match": 0,
-            "count_negative_same_substrate_respos_no_other_ptm_any_catalyst_match": 0,
-            "count_negative_same_substrate_no_other_ptm_respos_any_catalyst_match": 0,
-            "count_negative_same_substrate_ptm_respos_no_catalyst_match": 0,
-            "count_negative_same_substrate_ptm_res_other_pos_any_catalyst_match": 0,  # New with v5
-            "count_negative_same_substrate_ptm_other_res_no_other_pos_any_catalyst_match": 0,  # New with v5
+            "count_negative_same_substrate_ptm_other_res_no_other_pos_any_catalyst_match": 0,
             "count_negative_same_substrate_ptm_other_respos_any_catalyst_match": 0,
-            "count_negative_same_substrate_respos_other_ptm_any_catalyst_match": 0,
-            "count_negative_same_substrate_respos_no_other_ptm_no_catalyst_match": 0,
-            "count_negative_same_substrate_ptm_res_no_other_pos_no_catalyst_match": 0,  # New with v5
-            "count_negative_same_substrate_ptm_no_other_respos_no_catalyst_match": 0,
+            "count_negative_same_substrate_no_other_ptm_respos_any_catalyst_match": 0,
+            "count_negative_same_substrate_other_ptm_no_other_respos_any_catalyst_match": 0,
+            "count_negative_same_substrate_other_ptm_res_no_other_pos_any_catalyst_match": 0,
             "count_negative_same_substrate_other_ptm_respos_any_catalyst_match": 0,
-            "count_negative_same_substrate_respos_other_ptm_no_catalyst_match": 0,
-            "count_negative_same_substrate_ptm_res_other_pos_no_catalyst_match": 0,  # New with v5
-            "count_negative_same_substrate_ptm_other_res_no_other_pos_no_catalyst_match": 0,  # New with v5
+            "count_negative_same_no_substrate_any_catalyst_match": 0,
+            # No catalyst matches
+            "count_negative_same_substrate_ptm_res_no_other_pos_no_catalyst_match": 0,
+            "count_negative_same_substrate_ptm_res_other_pos_no_catalyst_match": 0,
+            "count_negative_same_substrate_ptm_no_other_respos_no_catalyst_match": 0,
+            "count_negative_same_substrate_ptm_other_res_no_other_pos_no_catalyst_match": 0,
             "count_negative_same_substrate_ptm_other_respos_no_catalyst_match": 0,
+            "count_negative_same_substrate_other_ptm_no_other_respos_no_catalyst_match": 0,
+            "count_negative_same_substrate_other_ptm_res_no_other_pos_no_catalyst_match": 0,
             "count_negative_same_substrate_other_ptm_respos_no_catalyst_match": 0,
-            "count_negative_same_substrate_other_ptm_no_other_respos_any_catalyst_match": 0,  # New with v7
-            "count_negative_same_substrate_other_ptm_res_no_other_pos_any_catalyst_match": 0,  # New with v7
-            "count_negative_same_substrate_no_other_ptm_respos_no_catalyst_match": 0,  # New with v7
-            "count_negative_same_substrate_other_ptm_no_other_respos_no_catalyst_match": 0,  # New with v7
-            "count_negative_same_substrate_other_ptm_res_no_other_pos_no_catalyst_match": 0,  # New with v7
-            "count_negative_same_no_substrate_any_catalyst_match": 0,  # New with v11
-            "count_negative_same_no_substrate_no_catalyst_match": 0,  # New with v11
+            "count_negative_same_no_substrate_no_catalyst_match": 0,
+            # Other substrate matches
             "count_negative_other_substrate_any_catalyst_match": 0,
             "count_negative_other_substrate_no_catalyst_match": 0,
-            "count_negative_same_substrate_ptm_any_catalyst_match": 0,  # New with v23
-            "count_negative_same_substrate_ptm_no_catalyst_match": 0,  # New with v23
-            "count_negative_same_substrate_other_ptm_any_catalyst_match": 0,  # New with v23
-            "count_negative_same_substrate_other_ptm_no_catalyst_match": 0,  # New with v23
-            "count_negative_same_substrate_not_uniprot_bm25": 0,  # New with v14
-            "count_negative_bioasq": 0,  # New with v14
-            "count_negative_random": 0,
+            # BM25 negatives
+            "count_negative_same_substrate_not_uniprot_bm25": 0,
+            # PubMed negatives
+            "count_negative_pubmed": 0,
         }
 
         self.non_matching_positive_label = 1  # 1 is positive example, 0 is negative
@@ -100,8 +83,8 @@ class UniprotRetriever(Retriever):
 
         super().__init__(*args, **kwargs)
 
-        if "negative_bioasq" in self.margin_value_dict:
-            self.add_bioasq_documents()
+        if "negative_pubmed" in self.margin_value_dict:
+            self.add_pubmed_documents()
 
         self.bm25_query_cache_file = "edel_repo_cache/treatment_explorer_bm25_query_cache.json"
         if Path(self.bm25_query_cache_file).exists():
@@ -266,7 +249,7 @@ class UniprotRetriever(Retriever):
 
         return input_examples
 
-    def get_negative_examples_bioasq(
+    def get_negative_examples_pubmed(
         self,
         substrate_name: str,
         substrate_full_name: str,
@@ -296,8 +279,8 @@ class UniprotRetriever(Retriever):
                 self.synonyms_in_query,
                 self.full_name_in_query,
             )
-            # TODO Check that entity does not occur in the selected BioASQ text
-            # Draw random sample of PMIDs in all BioASQ texts
+            # TODO Check that entity does not occur in the selected PubMed text
+            # Draw random sample of PMIDs in all PubMed texts
             current_pmids = self.all_pmids_texts.sample(n=max_number, seed=seed)
             for i, example_text in enumerate(current_pmids["text"]):
                 input_examples.append(
@@ -1483,24 +1466,24 @@ class UniprotRetriever(Retriever):
                 # print(self.margin_value_dict)
                 # exit()
 
-                # Get negative examples from BioASQ
-                if "negative_bioasq" in self.margin_value_dict:
-                    samples = self.get_negative_examples_bioasq(
+                # Get negative examples from PubMed
+                if "negative_pubmed" in self.margin_value_dict:
+                    samples = self.get_negative_examples_pubmed(
                         uniprot_dataset[0]["substrate"],
                         uniprot_dataset[0]["substrate_full_name"],
                         uniprot_dataset[0]["substrate_synonyms"],
                         ptm_residue_position_combinations,
                         label=0,
-                        margin=self.margin_value_dict["negative_bioasq"],
+                        margin=self.margin_value_dict["negative_pubmed"],
                         max_number=max_number,
                         seed=seed,
                     )
 
                     input_examples.extend(samples)
-                    self.examples_count_dict["count_negative_bioasq"] += len(samples)
+                    self.examples_count_dict["count_negative_pubmed"] += len(samples)
 
                     # print(self.margin_value_dict)
-                    # print(self.examples_count_dict["count_negative_bioasq"])
+                    # print(self.examples_count_dict["count_negative_pubmed"])
 
                 # exit()
         # Get random negatives for the whole dataset

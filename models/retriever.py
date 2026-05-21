@@ -176,30 +176,12 @@ class Retriever(ABC):
     def add_previous_faiss_examples(self, example_dict: Dict):
         pass
 
-    def add_bioasq_documents(self):
+    def add_pubmed_documents(self):
         pubmed_cache = self.load_pubmed_cache()
         self.pl_dataframe = pl.from_arrow(pubmed_cache.data.table)
         print("Polars Dataframe loaded")
-        bioasq_data = {}
-        bioasq_paths = self.beir_dataset_files
-        for path in bioasq_paths:
-            with open(path, "r") as f:
-                data = json.load(f)
-                bioasq_data.update(data)
 
-        bioasq_dict = {}
-        all_pmids = set()
-
-        # First pass through all the data
-        for question in tqdm(bioasq_data["questions"], desc="Reading BioASQ data"):
-            question_text = question["body"]
-            for document in question["documents"]:
-                bioasq_dict[question_text] = bioasq_dict.get(question_text, [])
-                pmid = document.split("/")[-1]
-                bioasq_dict[question_text].append(pmid)
-                all_pmids.add(pmid)
-
-        self.all_pmids_texts = self.get_texts_from_pmids(all_pmids)
+        self.all_pmids_texts = self.get_texts_from_pmids(None)
 
     def load_pubmed_cache(
         self, pubmed_cache_file: str = "edel_repo_cache/datasets/pubmed.dataset"
@@ -223,7 +205,10 @@ class Retriever(ABC):
         return pubmed_cache
 
     def get_texts_from_pmids(self, pmids: List[str]) -> pl.DataFrame:
-        filtered_df = self.pl_dataframe.filter(self.pl_dataframe["pmid"].is_in(pmids))
+        if pmids is not None:
+            filtered_df = self.pl_dataframe.filter(self.pl_dataframe["pmid"].is_in(pmids))
+        else:
+            filtered_df = self.pl_dataframe
         text_column = (
             pl.when((pl.col("title") != "") & (pl.col("abstract") != ""))
             .then(pl.col("title") + ". " + pl.col("abstract"))

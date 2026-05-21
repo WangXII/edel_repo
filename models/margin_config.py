@@ -35,7 +35,7 @@ margin_classes_v1 = MarginConfig(
         "negative_other_gene_no_treatment_match": 1.0,
         # New negative
         "negative_same_substrate_bm25": 0.8,
-        "negative_bioasq": 1.0,
+        "negative_pubmed": 1.0,
     },
     margin_fn=lambda x: 1 - np.cos(x * np.pi / 2),
 )
