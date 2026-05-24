@@ -1,0 +1,6 @@
+[submodule "hf_models/edel_ptm"]
+	path = hf_models/edel_ptm
+	url = https://huggingface.co/xdawang/edel_ptm
+[submodule "hf_models/edel_po"]
+	path = hf_models/edel_po
+	url = https://huggingface.co/xdawang/edel_po
